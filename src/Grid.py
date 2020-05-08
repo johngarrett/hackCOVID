@@ -6,12 +6,18 @@ from Desk import Desk
 Grids are laid out so that the origin is the top left corner of the office/map/etc.
 """
 class Grid:
-    def __init__(self, height: int, length: int, grid = None):
+    def __init__(self,
+                 height: int,
+                 length: int,
+                 desk_x: float = 1.0,
+                 desk_y: float = 1.0,
+                 grid: [[int]] = None):
         if height < 1 or length < 1:
             raise ValueError("height or length cannot be 0")
 
         self.height = height
         self.length = length
+        self.desk_dim = (desk_x, desk_y)
         if grid:
             self.grid = grid
         else:
@@ -29,13 +35,12 @@ class Grid:
     def get_desk(self, x: int, y: int) -> Desk:
         return self.grid[x][y]
 
-    def seating(self, social_distance: int) -> [(int, int)]:
+    def seating(self, social_distance: float) -> [(int, int)]:
         """
-        Create a list of desks that are:
+        DFS algorithm to create a list of desks that are:
             1) properly socially distanced and
-            2) valid places to sit (according to our)
+            2) valid places to sit (according to our office layout)
         """
-        first_desk = find_topmost_desk(self.grid)
         searched_desks = []
         good_desks = []
         unsearched_desks = [(0,0)]
@@ -59,7 +64,7 @@ class Grid:
                 if not desk_obj or desk_obj.is_obstruction:
                     continue
 
-                if desk_is_properly_spaced(d, good_desks, social_distance):
+                if desk_is_properly_spaced(d, good_desks, social_distance, self.desk_dim):
                     good_desks.append(d)
 
         return good_desks
@@ -75,12 +80,12 @@ class Grid:
 
         return s
 
-def desk_is_properly_spaced(d: (int,int), others: [(int,int)], social_distance: float) -> bool:
+def desk_is_properly_spaced(d: (int,int), others: [(int,int)], social_distance: float, desk_dim: (float, float)) -> bool:
     """
     Check that a particular desk is a certain distance from others in a list.
     """
     for o in others:
-        dz = math.sqrt((d[0]-o[0])**2 + (d[1]-o[1])**2)
+        dz = math.sqrt(((d[0]-o[0])/desk_dim[0])**2 + ((d[1]-o[1])/desk_dim[1])**2)
         if dz <= social_distance:
             return False
     return True
