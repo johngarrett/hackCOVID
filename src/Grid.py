@@ -10,12 +10,20 @@ class Grid:
         self.grid = [[None for i in range(height)] for j in range(length)]
 
     def set_desk(self, x: int, y: int, d: Desk) -> Desk:
+        """
+        Put a desk object at position (x,y) in our grid.
+        """
         ret = self.grid[x][y]
         self.grid[x][y] = d
 
         return ret
 
-    def seating(self):
+    def seating(self, social_distance: int) -> [(int, int)]:
+        """
+        Create a list of desks that are:
+            1) properly socially distanced and
+            2) valid places to sit (according to our)
+        """
         searched_desks = []
         unsearched_desks = []
         good_desks = []
@@ -36,10 +44,16 @@ class Grid:
                 if desk_is_properly_spaced(d, good_desks, social_distance):
                     good_desks.append(d)
 
+        return good_desks
+
 def desk_is_properly_spaced(d: (int,int), others: [(int,int)], social_distance: int) -> bool:
+    """
+    Check that a particular desk is a certain distance from others in a list.
+    """
     for o in others:
         if sqrt((d[0]+o[0])**2 + (d[1]+o[1])**2) < social_distance:
             return False
+    return True
 
 def find_topmost_desk(grid: [[int]]) -> (int, int):
     """
