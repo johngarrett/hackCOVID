@@ -1,5 +1,4 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import {Map} from './components/Map.js'
 
@@ -7,35 +6,34 @@ class App extends React.Component {
      constructor(props) {
         super(props);
         this.state = {
-            width: 5,
-            height: 5,
-            tWidth: 1,
-            tHeight: 1,
+            width: 500,
+            height: 250,
+            tWidth: 150,
+            tHeight: 50,
         };
         this.handleInputChange = this.handleInputChange.bind(this);
     }
     handleInputChange(event) {
         const target = event.target;
-        const value = target.value;
+        const value = target.value < 0 ? 0 : target.value;
         const name = target.name;
         this.setState({ [name]: value });
         this.forceUpdate()
     }
     render() {
         return (
-            <div>
-            <Map width={this.state.width} height={this.state.height} tWidth={this.state.tWidth} tHeight ={this.state.tHeight}/ >
+        <div>
             <form>
                 <label>
                   Map Height: 
-                  <input name="height" type="number"
+                  <input name="height" type="number" pattern="[0-9]*"
                     value={this.state.height}
                     onChange={this.handleInputChange} />
                 </label>
                 <br></br>
                 <label>
                   Map Width: 
-                  <input name="width" type="number"
+                  <input name="width" type="number" pattern="[0-9]*"
                     value={this.state.width}
                     onChange={this.handleInputChange} />
                 </label>
@@ -54,7 +52,9 @@ class App extends React.Component {
                     onChange={this.handleInputChange} />
                 </label>
             </form>
-            </div>
+
+            <Map width={this.state.width} height={this.state.height} tWidth={this.state.tWidth} tHeight ={this.state.tHeight}/ >
+        </div>
         );
     }
 }
