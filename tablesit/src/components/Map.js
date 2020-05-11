@@ -12,9 +12,24 @@ export class Map extends React.Component {
     this.forceUpdate();
   };
     render() {
+        console.log(this.props)
+        let recip = this.props.tWidth / this.props.tHeight
+        if (recip < 0) {
+            recip = 1/recip
+        }
+
+        let tableStyle = {
+            padding: '0px',
+            margin: 'auto',
+            border: '0px',
+            'border-spacing': '2px',
+            'background-color': '#E8E8E8',
+            width: '90vw',
+            height: '70vh',
+        };
         return (
             <div>
-            <Table responsive>
+            <Table responsive style={tableStyle}>
                 <tbody>
                     {this.renderDesks()}
                 </tbody>
@@ -24,18 +39,36 @@ export class Map extends React.Component {
     }
 
     renderDesks() {
-        console.log(this.props)
+        let elementStyle = {
+            width: (this.props.tWidth / this.props.width), // * actual table width
+            height: this.props.height / this.props.tHeight, // * actual table height
+            padding: '0px',
+            margin: '0px',
+            border: '0px',
+        };
+
+        let rowStyle = {
+            'line-height': '0px',
+        };
+
         var desks = []
         let columns = Math.floor(this.props.width / this.props.tWidth)
         let rows = Math.floor(this.props.height / this.props.tHeight)
         let widthRatio = 1/columns
         let heightRatio = 1/rows
+        console.log(columns)
+        console.log(this.props.tWidth)
+        console.log(columns * this.props.tWidth)
         for (let r = 0; r < rows; r++) {
             let rowElems = [];
             for (let c = 0; c < columns; c++) {
-                rowElems.push(<td key={c} style={{width: this.props.tWidth, height: this.props.tHeight}}><Desk width={widthRatio} height={heightRatio} /></td>)
+                rowElems.push(
+                    <td key={c} style={elementStyle}>
+                    <Desk width={widthRatio} height={heightRatio} />
+                    </td>
+                );
             }
-            desks.push(<tr key={r}>{rowElems}</tr>)
+            desks.push(<tr key={r} style ={rowStyle}>{rowElems}</tr>)
         }
         return desks;
     }
@@ -49,6 +82,7 @@ class Desk extends React.Component {
             color: '#87e68b',
             status: 0,
         } 
+
         this.handleClick = this.handleClick.bind(this)
     }
 
@@ -60,8 +94,19 @@ class Desk extends React.Component {
     }
 
     render() {
+        let rectangleStyle = {
+            padding: '0px',
+            margin: '0px',
+            border: '0px',
+            'margin-bottom': '0px',
+            flex: 1,
+        };
         return (
-            <Rectangle onClick={this.handleClick} fill={{color: this.state.color}} height={'100%'} width={'100%'}/>
+            <Rectangle style={rectangleStyle} 
+                onClick={this.handleClick}
+                fill={{color: this.state.color}} 
+                height={'100%'} width={'100%'}
+            />
         );
     }
 }

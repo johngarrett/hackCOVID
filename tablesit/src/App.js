@@ -6,10 +6,10 @@ class App extends React.Component {
      constructor(props) {
         super(props);
         this.state = {
-            width: 500,
-            height: 250,
-            tWidth: 150,
-            tHeight: 50,
+            width: 96 + (96/12)*2 + 4, //padding
+            height: 40 + (40/4)*2 + 4, //padding
+            tWidth: 12,
+            tHeight: 4,
         };
         this.handleInputChange = this.handleInputChange.bind(this);
     }
